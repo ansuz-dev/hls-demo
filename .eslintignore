@@ -1,0 +1,18 @@
+# dependencies
+node_modules/
+.yarn/
+
+# production
+build/
+dist/
+
+# ide
+.vscode/
+
+# external docs
+logs/
+
+config/
+mochawesome-report/
+
+public/js/
