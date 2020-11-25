@@ -1,3 +1,5 @@
+/*eslint no-unused-vars: ["error", { "args": "none" }]*/
+
 "use strict";
 
 const {
