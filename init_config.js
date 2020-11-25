@@ -31,15 +31,23 @@ function initJWT() {
   const data = {
     development: {
       user: crypto.randomBytes(48).toString("base64"),
+      confirmation: crypto.randomBytes(48).toString("base64"),
+      reset: crypto.randomBytes(48).toString("base64"),
     },
     test: {
       user: crypto.randomBytes(48).toString("base64"),
+      confirmation: crypto.randomBytes(48).toString("base64"),
+      reset: crypto.randomBytes(48).toString("base64"),
     },
     beta: {
       user: crypto.randomBytes(48).toString("base64"),
+      confirmation: crypto.randomBytes(48).toString("base64"),
+      reset: crypto.randomBytes(48).toString("base64"),
     },
     production: {
       user: crypto.randomBytes(48).toString("base64"),
+      confirmation: crypto.randomBytes(48).toString("base64"),
+      reset: crypto.randomBytes(48).toString("base64"),
     }
   };
 
