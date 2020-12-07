@@ -3,8 +3,7 @@
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 
-const env = process.env.NODE_ENV || "development";
-const config = require("../config/jwt.json")[env];
+import { jwt as config } from "../../secrets";
 
 const issuer = "template";
 
@@ -56,7 +55,7 @@ function computeUserToken(user, permanent=false) {
       checksum: _computeChecksum(user, subjects.access),
     },
     config.user,
-    opts
+    opts,
   );
 }
 
@@ -82,7 +81,7 @@ function computeConfirmationToken(user) {
       id: user.id,
     },
     config.confirmation,
-    opts
+    opts,
   );
 }
 
@@ -108,7 +107,7 @@ function computeResetToken(user) {
       checksum: _computeChecksum(user, subjects.reset),
     },
     config.reset,
-    opts
+    opts,
   );
 }
 

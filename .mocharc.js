@@ -8,5 +8,5 @@ module.exports = {
   timeout: 15000,
   ui: "bdd",
   slow: 75,
-  require: ["test/mocha.env.js"],
+  require: ["express/test/mocha.env.js"],
 };

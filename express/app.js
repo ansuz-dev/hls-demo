@@ -17,6 +17,8 @@ import {
 
 import indexRouter from "./routes/index";
 
+import { cookie } from "../secrets";
+
 const app = express();
 app.use(helmet({
   contentSecurityPolicy: false,
@@ -39,7 +41,7 @@ app.use(morgan("combined", { stream: accessLogStream }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser(require("./config/cookie.json").secret));
+app.use(cookieParser(cookie.secret));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);

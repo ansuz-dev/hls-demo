@@ -3,7 +3,7 @@
 "use strict";
 
 const {
-  Model
+  Model,
 } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
-      type: DataTypes.INTEGER
+      type: DataTypes.INTEGER,
     },
     email: {
       field: "email",
@@ -41,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
       field: "type",
       type: DataTypes.ENUM("PERSON", "ORGANIZATION"),
       allowNull: false,
-      defaultValue: "PERSON"
+      defaultValue: "PERSON",
     },
     state: {
       field: "state",
@@ -58,12 +58,12 @@ module.exports = (sequelize, DataTypes) => {
     createdDate: {
       field: "created_date",
       allowNull: false,
-      type: DataTypes.DATE
+      type: DataTypes.DATE,
     },
     updatedDate: {
       field: "updated_date",
       allowNull: false,
-      type: DataTypes.DATE
+      type: DataTypes.DATE,
     },
   }, {
     sequelize,

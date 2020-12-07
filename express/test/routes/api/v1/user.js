@@ -3,16 +3,15 @@ import chai from "chai";
 import chaiHttp from "chai-http";
 import chaiAsPromised from "chai-as-promised";
 
+import server from "../../../../index";
+import dbunit from "../../../dbunit/generic";
+
 chai.use(chaiHttp);
 chai.use(chaiAsPromised);
 
 const expect = chai.expect;
 const assert = chai.assert;
 chai.should();
-
-const server = require("../../../../bin/www");
-
-import dbunit from "../../../dbunit/generic";
 
 let _token = null;
 

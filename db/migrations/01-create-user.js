@@ -9,7 +9,7 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       email: {
         field: "email",
@@ -26,7 +26,7 @@ module.exports = {
         field: "type",
         type: Sequelize.ENUM("PERSON", "ORGANIZATION"),
         allowNull: false,
-        defaultValue: "PERSON"
+        defaultValue: "PERSON",
       },
       state: {
         field: "state",
@@ -43,16 +43,16 @@ module.exports = {
       createdDate: {
         field: "created_date",
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedDate: {
         field: "updated_date",
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
     });
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable("Users");
-  }
+  },
 };

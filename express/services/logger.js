@@ -35,7 +35,7 @@ logger.configure({
     logFilter(),
     logger.format.splat(),
     logger.format.timestamp(),
-    logFormat
+    logFormat,
   ),
   transports: [ transport ],
   exitOnError: false,

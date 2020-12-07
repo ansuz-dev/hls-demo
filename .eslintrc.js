@@ -2,21 +2,21 @@ module.exports = {
   "env": {
     "mocha": true,
     "es6": true,
-    "node": true
+    "node": true,
   },
   "extends": [
     "eslint:recommended",
   ],
   "globals": {
     "Atomics": "readonly",
-    "SharedArrayBuffer": "readonly"
+    "SharedArrayBuffer": "readonly",
   },
   "parserOptions": {
     "sourceType": "module",
     "ecmaFeatures": {
-      "jsx": true
+      "jsx": true,
     },
-    "ecmaVersion": 2018
+    "ecmaVersion": 2018,
   },
   "plugins": [
     "mocha",
@@ -26,22 +26,27 @@ module.exports = {
     "quotes": ["error", "double"],
     "mocha/no-exclusive-tests": "error",
     "indent": ["error", 2],
+    "comma-dangle": ["error", "always-multiline"],
+    "max-len": [
+      "error",
+      { "code": 80, "ignoreStrings": true, "ignoreTemplateLiterals": true },
+    ],
   },
   "settings": {
     "react": {
       "createClass": "createReactClass",
       "pragma": "React",
       "version": "detect",
-      "flowVersion": "0.53"
+      "flowVersion": "0.53",
     },
     "propWrapperFunctions": [
       "forbidExtraProps",
       {"property": "freeze", "object": "Object"},
-      {"property": "myFavoriteWrapper"}
+      {"property": "myFavoriteWrapper"},
     ],
     "linkComponents": [
       "Hyperlink",
-      {"name": "Link", "linkAttribute": "to"}
-    ]
-  }
+      {"name": "Link", "linkAttribute": "to"},
+    ],
+  },
 };

@@ -125,7 +125,9 @@ describe("service://user", function () {
       let oldPassword = "my_password";
       let newPassword = "my_new_password";
 
-      let user = await userService.changePassword(userId, oldPassword, newPassword);
+      let user = await userService.changePassword(
+        userId, oldPassword, newPassword,
+      );
       assert.isNotNull(user);
     });
 

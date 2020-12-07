@@ -3,16 +3,15 @@ import chai from "chai";
 import chaiHttp from "chai-http";
 import chaiAsPromised from "chai-as-promised";
 
+import server from "../../../../index";
+import dbunit from "../../../dbunit/generic";
+
 chai.use(chaiHttp);
 chai.use(chaiAsPromised);
 
 const expect = chai.expect;
 const assert = chai.assert;
 chai.should();
-
-const server = require("../../../../bin/www");
-
-import dbunit from "../../../dbunit/generic";
 
 describe("route://api/v1/auth", () => {
 
@@ -26,7 +25,7 @@ describe("route://api/v1/auth", () => {
       const data = {
         email: faker.internet.email(),
         password: faker.internet.password(8),
-        defaultLanguage: "VI"
+        defaultLanguage: "VI",
       };
 
       return chai.request(server)

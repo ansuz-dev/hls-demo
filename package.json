@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "init": "node -r esm init_config.js",
+    "init-secrets": "node -r esm scripts/init_secrets.js",
     "start": "node ./bin/www",
     "migrate": "NODE_ENV=development npx sequelize db:migrate",
     "migrate-test": "NODE_ENV=test npx sequelize db:migrate",
@@ -13,7 +13,7 @@
     "seed-beta": "NODE_ENV=beta npx sequelize db:seed:all",
     "seed-beta-undo": "NODE_ENV=beta npx sequelize db:seed:undo:all",
     "seed-prod": "NODE_ENV=production npx sequelize db:seed:all",
-    "test": "mocha --require esm --recursive --exit test/",
+    "test": "mocha --require esm --recursive --exit express/test/",
     "lint": "eslint ."
   },
   "dependencies": {
