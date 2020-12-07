@@ -1,6 +1,10 @@
 import express from "express";
 
 import {
+  expressHandler,
+} from "../../../helpers/express";
+
+import {
   logger,
   userService,
   // mailService
@@ -12,15 +16,48 @@ import {
 
 import confirmationMid from "../../../mws/confirmation";
 import resetMid from "../../../mws/reset_password";
-
 import { UserTypes } from "../../../services/constant";
+
+import authValidators from "./validators/auth";
 
 const router = express.Router();
 
-router.post("/register", async (req, res, next) => {
-  logger.info("Register new account to the system as the user");
+/**
+ * @swagger
+ * tags:
+ *   name: Authentication
+ *   description: Authentication
+ */
 
-  try {
+/**
+ * @swagger
+ * /auth/register:
+ *   post:
+ *     description: Register a new user
+ *     operationId: registerUser
+ *     tags:
+ *       - Authentication
+ *     produces:
+ *       - application/json
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/RegisterData'
+ *     responses:
+ *       200:
+ *         description: User
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ */
+
+router.post("/register",
+  authValidators.registerValidator,
+  expressHandler(async (req, res) => {
+    logger.info("Register new account to the system as the user");
+
     const data = {
       email: req.body.email,
       password: req.body.password,
@@ -33,72 +70,53 @@ router.post("/register", async (req, res, next) => {
     // await mailService.sendUserConfirmationEmail(user);
 
     res.json(user);
-  } catch(error) {
-    next(error);
-  }
-});
+  }));
 
-router.post("/login", async (req, res, next) => {
+router.post("/login", expressHandler(async (req, res) => {
   logger.info("Login to the system as the user");
 
-  try {
-    const user = await userService.authenticate(req.body);
-    const token = jwtHelper.computeUserToken(user, true);
+  const user = await userService.authenticate(req.body);
+  const token = jwtHelper.computeUserToken(user, true);
 
-    res.json({ token, user });
-  } catch(error) {
-    next(error);
-  }
-});
+  res.json({ token, user });
+}));
 
-router.put("/password", async (req, res, next) => {
+router.put("/password", expressHandler(async (req, res) => {
   logger.info("Request to reset password");
 
-  try {
-    const { email } = req.body;
+  const { email } = req.body;
 
-    // send reset password email to the target
-    const trimmedEmail = utilHelper.normEmail(email);
-    const user = await userService.getByEmail(trimmedEmail, null);
-    if (user) {
-      // await mailService.sendUserResetPassword(user);
-    }
-
-    res.end();
-  } catch(error) {
-    next(error);
+  // send reset password email to the target
+  const trimmedEmail = utilHelper.normEmail(email);
+  const user = await userService.getByEmail(trimmedEmail, null);
+  if (user) {
+    // await mailService.sendUserResetPassword(user);
   }
-});
+
+  res.end();
+}));
 
 router.put("/password/reset",
   resetMid.requireReset,
-  async (req, res, next) => {
+  expressHandler(async (req, res) => {
     logger.info("Reset password by user=[%s]", req.user.id);
 
-    try {
-      const { password } = req.body;
+    const { password } = req.body;
 
-      await userService.resetPassword(req.user.id, password);
+    await userService.resetPassword(req.user.id, password);
 
-      res.end();
-    } catch(error) {
-      next(error);
-    }
-  });
+    res.end();
+  }));
 
 router.get("/activation",
   confirmationMid.requireConfirmation,
-  async (req, res, next) => {
+  expressHandler(async (req, res) => {
     logger.info("Activate the account=[%s]", req.user.id);
 
-    try {
-      await userService.enable(req.user.id);
+    await userService.enable(req.user.id);
 
-      // redirect to login page
-      res.redirect(301, "/");
-    } catch(error) {
-      next(error);
-    }
-  });
+    // redirect to login page
+    res.redirect(301, "/");
+  }));
 
 export default router;

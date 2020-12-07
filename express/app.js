@@ -1,19 +1,13 @@
 /*eslint no-unused-vars: ["error", { "args": "none" }]*/
 
-import fs from "fs";
 import path from "path";
 import httpError from "http-errors";
 import express from "express";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import cors from "cors";
-
-import morgan from "morgan";
-const rfs = require("rotating-file-stream");
-
-import {
-  logger,
-} from "./services";
+import winston from "winston";
+import expressWinston from "express-winston";
 
 import indexRouter from "./routes/index";
 
@@ -26,25 +20,67 @@ app.use(helmet({
 app.disable("x-powered-by");
 app.use(cors());
 
-//  setup loggers
-const logDirectory = path.join(__dirname, "logs");
-fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
-
-// Configure http access logs
-const accessLogStream = rfs.createStream("access.log", {
-  interval: "1d",
-  maxFiles: 15,
-  path: logDirectory,
-});
-
-app.use(morgan("combined", { stream: accessLogStream }));
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(cookie.secret));
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "../webapp")));
+
+app.use(expressWinston.logger({
+  transports: [
+    new winston.transports.Console(),
+  ],
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json(),
+  ),
+  metaField: null,
+  requestWhitelist: [
+    "hostname",
+    "ip",
+    "url",
+    "headers",
+    "method",
+    "httpVersion",
+    "originalUrl",
+    "query",
+    "body",
+  ],
+  bodyBlacklist: [ "password" ],
+  colorize: false,
+  ignoreRoute: function (req, res) {
+    if (req.url.match(/^\/docs\/.*/g)) {
+      return true;
+    }
+
+    return false;
+  },
+}));
 
 app.use("/", indexRouter);
+
+app.use(expressWinston.errorLogger({
+  transports: [
+    new winston.transports.Console(),
+  ],
+  format: winston.format.combine(
+    winston.format.json(),
+  ),
+  metaField: null,
+  blacklistedMetaFields: ["exception"],
+  requestWhitelist: [
+    "hostname",
+    "ip",
+    "url",
+    "headers",
+    "method",
+    "httpVersion",
+    "originalUrl",
+    "query",
+    "body",
+  ],
+  bodyBlacklist: [ "password" ],
+  colorize: false,
+}));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -53,8 +89,6 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
-  logger.error(err);
-
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};

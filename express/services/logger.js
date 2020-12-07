@@ -6,7 +6,7 @@ import logger from "winston";
 require("winston-daily-rotate-file");
 
 //  setup loggers
-const logDirectory = path.join(__dirname, "..", "logs");
+const logDirectory = path.join(__dirname, "../../logs");
 fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
 
 // Configure debug log

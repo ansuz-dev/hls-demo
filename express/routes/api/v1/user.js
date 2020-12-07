@@ -2,6 +2,10 @@
 import express from "express";
 
 import {
+  expressHandler,
+} from "../../../helpers/express";
+
+import {
   logger,
   userService,
 } from "../../../services";
@@ -12,50 +16,30 @@ const router = express.Router();
 
 router.use(authMid.requireUser);
 
-router.get("/", async (req, res, next) => {
+router.get("/", expressHandler(async (req, res) => {
   logger.info("Get information of logged user=[%s]", req.user.id);
+  res.json(req.user);
+}));
 
-  try {
-    res.json(req.user);
-  } catch(error) {
-    next(error);
-  }
-});
-
-router.put("/", async (req, res, next) => {
+router.put("/", expressHandler(async (req, res) => {
   logger.info("Update information of logged user=[%s]", req.user.id);
+  const user = await userService.update(req.user.id, req.body);
+  res.json(user);
+}));
 
-  try {
-    const user = await userService.update(req.user.id, req.body);
-
-    res.json(user);
-  } catch(error) {
-    next(error);
-  }
-});
-
-router.delete("/", async (req, res, next) => {
+router.delete("/", expressHandler(async (req, res) => {
   logger.info("Delete logged user=[%s]", req.user.id);
 
-  try {
-    await userService.block(req.user.id);
-    res.end();
-  } catch(error) {
-    next(error);
-  }
-});
+  await userService.block(req.user.id);
+  res.end();
+}));
 
-router.put("/password", async (req, res, next) => {
+router.put("/password", expressHandler(async (req, res) => {
   logger.info("Change password of logged user=[%s]", req.user.id);
 
-  try {
-    const { oldPassword, newPassword } = req.body;
-    await userService.changePassword(req.user.id, oldPassword, newPassword);
-
-    res.end();
-  } catch(error) {
-    next(error);
-  }
-});
+  const { oldPassword, newPassword } = req.body;
+  await userService.changePassword(req.user.id, oldPassword, newPassword);
+  res.end();
+}));
 
 export default router;
