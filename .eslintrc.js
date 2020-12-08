@@ -31,6 +31,9 @@ module.exports = {
       "error",
       { "code": 80, "ignoreStrings": true, "ignoreTemplateLiterals": true },
     ],
+    "no-multiple-empty-lines": [
+      "error", { "max": 1, "maxBOF": 0, "maxEOF": 1 },
+    ],
   },
   "settings": {
     "react": {

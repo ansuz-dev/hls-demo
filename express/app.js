@@ -6,12 +6,11 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import cors from "cors";
-import winston from "winston";
-import expressWinston from "express-winston";
-
 import indexRouter from "./routes/index";
 
 import { cookie } from "../secrets";
+
+import { logger } from "./services";
 
 const app = express();
 app.use(helmet({
@@ -25,62 +24,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(cookie.secret));
 app.use(express.static(path.join(__dirname, "../webapp")));
 
-app.use(expressWinston.logger({
-  transports: [
-    new winston.transports.Console(),
-  ],
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.json(),
-  ),
-  metaField: null,
-  requestWhitelist: [
-    "hostname",
-    "ip",
-    "url",
-    "headers",
-    "method",
-    "httpVersion",
-    "originalUrl",
-    "query",
-    "body",
-  ],
-  bodyBlacklist: [ "password" ],
-  colorize: false,
-  ignoreRoute: function (req, res) {
-    if (req.url.match(/^\/docs\/.*/g)) {
-      return true;
-    }
-
-    return false;
-  },
-}));
+app.use(logger.requestLogger);
 
 app.use("/", indexRouter);
 
-app.use(expressWinston.errorLogger({
-  transports: [
-    new winston.transports.Console(),
-  ],
-  format: winston.format.combine(
-    winston.format.json(),
-  ),
-  metaField: null,
-  blacklistedMetaFields: ["exception"],
-  requestWhitelist: [
-    "hostname",
-    "ip",
-    "url",
-    "headers",
-    "method",
-    "httpVersion",
-    "originalUrl",
-    "query",
-    "body",
-  ],
-  bodyBlacklist: [ "password" ],
-  colorize: false,
-}));
+app.use(logger.errorLogger);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

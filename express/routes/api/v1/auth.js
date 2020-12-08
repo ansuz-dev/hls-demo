@@ -5,9 +5,7 @@ import {
 } from "../../../helpers/express";
 
 import {
-  logger,
   userService,
-  // mailService
 } from "../../../services";
 
 import {
@@ -56,8 +54,6 @@ const router = express.Router();
 router.post("/register",
   authValidators.registerValidator,
   expressHandler(async (req, res) => {
-    logger.info("Register new account to the system as the user");
-
     const data = {
       email: req.body.email,
       password: req.body.password,
@@ -73,8 +69,6 @@ router.post("/register",
   }));
 
 router.post("/login", expressHandler(async (req, res) => {
-  logger.info("Login to the system as the user");
-
   const user = await userService.authenticate(req.body);
   const token = jwtHelper.computeUserToken(user, true);
 
@@ -82,8 +76,6 @@ router.post("/login", expressHandler(async (req, res) => {
 }));
 
 router.put("/password", expressHandler(async (req, res) => {
-  logger.info("Request to reset password");
-
   const { email } = req.body;
 
   // send reset password email to the target
@@ -99,22 +91,16 @@ router.put("/password", expressHandler(async (req, res) => {
 router.put("/password/reset",
   resetMid.requireReset,
   expressHandler(async (req, res) => {
-    logger.info("Reset password by user=[%s]", req.user.id);
-
     const { password } = req.body;
 
     await userService.resetPassword(req.user.id, password);
-
     res.end();
   }));
 
 router.get("/activation",
   confirmationMid.requireConfirmation,
   expressHandler(async (req, res) => {
-    logger.info("Activate the account=[%s]", req.user.id);
-
     await userService.enable(req.user.id);
-
     // redirect to login page
     res.redirect(301, "/");
   }));

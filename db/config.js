@@ -1,4 +1,3 @@
-
 const { db } = require("../secrets");
 
 const env = process.env.NODE_ENV || "development";

@@ -1,5 +1,5 @@
-import logger from "winston";
 import httpError from "http-errors";
+import { debugLogger as logger } from "./logger";
 
 import db from "../models";
 const {
