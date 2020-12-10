@@ -1,5 +1,5 @@
 import httpError from "http-errors";
-import { debugLogger as logger } from "./logger";
+import {debugLogger as logger} from "./logger";
 
 import db from "../models";
 const {
@@ -47,7 +47,7 @@ async function create(data={}, t) {
     passwordHash,
     type: data.type || UserTypes.person,
     defaultLanguage: data.defaultLanguage,
-  }, { transaction: t });
+  }, {transaction: t});
 
   return user;
 }
@@ -80,7 +80,7 @@ async function getByEmail(email, errorCode=404) {
   logger.debug("Get user by email=[%s]", email);
 
   let user = await User.findOne({
-    where: { email },
+    where: {email},
   });
   if (!user && errorCode) {
     throw httpError(errorCode, `User=[${email}] not found`);
@@ -106,7 +106,7 @@ async function update(id, data) {
       user.defaultLanguage = data.defaultLanguage;
     }
 
-    user = await user.save({ transaction: t });
+    user = await user.save({transaction: t});
 
     return user;
   });
@@ -123,7 +123,7 @@ async function changePassword(id, oldPassword, newPassword) {
     const newHash = await passwordHelper.hash(newPassword);
     user.passwordHash = newHash;
 
-    return user.save({ transaction: t });
+    return user.save({transaction: t});
   });
 }
 
@@ -140,7 +140,7 @@ async function resetPassword(id, password) {
     const passwordHash = await passwordHelper.hash(password);
     user.passwordHash = passwordHash;
 
-    return user.save({ transaction: t });
+    return user.save({transaction: t});
   });
 }
 
@@ -157,7 +157,7 @@ async function enable(id) {
 
     user.state = UserStates.enabled;
 
-    return user.save({ transaction: t });
+    return user.save({transaction: t});
   });
 }
 
@@ -174,7 +174,7 @@ async function block(id) {
 
     user.state = UserStates.blocked;
 
-    return user.save({ transaction: t });
+    return user.save({transaction: t});
   });
 }
 
@@ -187,7 +187,7 @@ async function block(id) {
  *
  * @throws { httpError.Unauthorized }
  */
-async function authenticate({ email, password }) {
+async function authenticate({email, password}) {
   if (!email) throw httpError(401, "Invalid email or password");
   if (!password) throw httpError(401, "Invalid email or password");
 
@@ -224,25 +224,25 @@ async function search(query, page = 0, limit = 20, latest = true) {
 
   let q = {};
   if (query.filter) {
-    q.name = { [Op.like]: `%${query.filter}%` };
+    q.name = {[Op.like]: `%${query.filter}%`};
   }
   if (query.type) {
     if (Array.isArray(query.type)) {
-      q.type = { [Op.in]: query.type };
+      q.type = {[Op.in]: query.type};
     } else if (typeof query.type === "string") {
       q.type = query.type;
     }
   }
   if (query.state) {
     if (Array.isArray(query.state)) {
-      q.state = { [Op.in]: query.state };
+      q.state = {[Op.in]: query.state};
     } else if (typeof query.state === "string") {
       q.state = query.state;
     }
   }
 
   let order = [];
-  if (latest) order.push([ "id", "DESC" ]);
+  if (latest) order.push(["id", "DESC"]);
 
   let result = await User.findAndCountAll({
     where: q,

@@ -29,11 +29,13 @@ module.exports = {
     "comma-dangle": ["error", "always-multiline"],
     "max-len": [
       "error",
-      { "code": 80, "ignoreStrings": true, "ignoreTemplateLiterals": true },
+      {"code": 80, "ignoreStrings": true, "ignoreTemplateLiterals": true},
     ],
     "no-multiple-empty-lines": [
-      "error", { "max": 1, "maxBOF": 0, "maxEOF": 1 },
+      "error", {"max": 1, "maxBOF": 0, "maxEOF": 1},
     ],
+    "object-curly-spacing": ["error", "never"],
+    "array-bracket-spacing": ["error", "never"],
   },
   "settings": {
     "react": {

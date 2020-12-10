@@ -14,7 +14,7 @@ import {
 
 import confirmationMid from "../../../mws/confirmation";
 import resetMid from "../../../mws/reset_password";
-import { UserTypes } from "../../../services/constant";
+import {UserTypes} from "../../../services/constant";
 
 import authValidators from "./validators/auth";
 
@@ -72,11 +72,11 @@ router.post("/login", expressHandler(async (req, res) => {
   const user = await userService.authenticate(req.body);
   const token = jwtHelper.computeUserToken(user, true);
 
-  res.json({ token, user });
+  res.json({token, user});
 }));
 
 router.put("/password", expressHandler(async (req, res) => {
-  const { email } = req.body;
+  const {email} = req.body;
 
   // send reset password email to the target
   const trimmedEmail = utilHelper.normEmail(email);
@@ -91,7 +91,7 @@ router.put("/password", expressHandler(async (req, res) => {
 router.put("/password/reset",
   resetMid.requireReset,
   expressHandler(async (req, res) => {
-    const { password } = req.body;
+    const {password} = req.body;
 
     await userService.resetPassword(req.user.id, password);
     res.end();

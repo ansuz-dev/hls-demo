@@ -44,7 +44,7 @@ async function init() {
 }
 
 async function clean() {
-  await User.destroy({ where: { id: { [Op.ne]: null }}});
+  await User.destroy({where: {id: {[Op.ne]: null}}});
 }
 
 export default {

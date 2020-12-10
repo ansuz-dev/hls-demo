@@ -1,4 +1,4 @@
-import { validationResult } from "express-validator";
+import {validationResult} from "express-validator";
 import httpError from "http-errors";
 
 export function expressHandler(fn) {

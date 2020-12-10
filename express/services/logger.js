@@ -11,11 +11,11 @@ const requestDirectory = path.join(logDirectory, "request");
 const errorDirectory = path.join(logDirectory, "error");
 
 fs.existsSync(debugDirectory)
-  || fs.mkdirSync(debugDirectory, { recursive: true });
+  || fs.mkdirSync(debugDirectory, {recursive: true});
 fs.existsSync(requestDirectory)
-  || fs.mkdirSync(requestDirectory, { recursive: true });
+  || fs.mkdirSync(requestDirectory, {recursive: true});
 fs.existsSync(errorDirectory)
-  || fs.mkdirSync(errorDirectory, { recursive: true });
+  || fs.mkdirSync(errorDirectory, {recursive: true});
 
 const logFormat = winston.format.printf(info => {
   let message = `${info.timestamp} - [${info.level.toUpperCase()}] : ${info.message}`;
@@ -71,7 +71,7 @@ export const requestLogger = expressWinston.logger({
     "query",
     "body",
   ],
-  bodyBlacklist: [ "password" ],
+  bodyBlacklist: ["password"],
   responseWhitelist: ["body"],
   colorize: false,
   ignoreRoute: function (req) {
@@ -109,7 +109,7 @@ export const errorLogger = expressWinston.errorLogger({
     "query",
     "body",
   ],
-  bodyBlacklist: [ "password" ],
+  bodyBlacklist: ["password"],
   responseWhitelist: ["body"],
   colorize: false,
 });

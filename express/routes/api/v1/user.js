@@ -31,7 +31,7 @@ router.delete("/", expressHandler(async (req, res) => {
 
 router.put("/password", expressHandler(async (req, res) => {
 
-  const { oldPassword, newPassword } = req.body;
+  const {oldPassword, newPassword} = req.body;
   await userService.changePassword(req.user.id, oldPassword, newPassword);
   res.end();
 }));

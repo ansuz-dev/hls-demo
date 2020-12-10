@@ -3,7 +3,7 @@
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 
-import { jwt as config } from "../../secrets";
+import {jwt as config} from "../../secrets";
 
 const issuer = "template";
 

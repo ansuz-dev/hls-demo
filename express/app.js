@@ -8,9 +8,9 @@ import helmet from "helmet";
 import cors from "cors";
 import indexRouter from "./routes/index";
 
-import { cookie } from "../secrets";
+import {cookie} from "../secrets";
 
-import { logger } from "./services";
+import {logger} from "./services";
 
 const app = express();
 app.use(helmet({
@@ -20,7 +20,7 @@ app.disable("x-powered-by");
 app.use(cors());
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({extended: true}));
 app.use(cookieParser(cookie.secret));
 app.use(express.static(path.join(__dirname, "../webapp")));
 
@@ -43,7 +43,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.json({ message: err.message });
+  res.json({message: err.message});
 });
 
 export default app;

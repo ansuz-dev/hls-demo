@@ -6,7 +6,7 @@ chai.use(chaiAsPromised);
 
 const assert = chai.assert;
 
-import { jwtHelper } from "../../helpers";
+import {jwtHelper} from "../../helpers";
 
 describe("helper://jwt", function () {
 
@@ -23,7 +23,7 @@ describe("helper://jwt", function () {
 
   describe("#verifyUserToken", () => {
     it("should verify user token", async () => {
-      let user = { id: 1, passwordHash: "demo" };
+      let user = {id: 1, passwordHash: "demo"};
       let token = jwtHelper.computeUserToken(user);
       let data = jwtHelper.verifyUserToken(token);
       assert.isObject(data);
@@ -52,7 +52,7 @@ describe("helper://jwt", function () {
 
   describe("#verifyConfirmationToken", () => {
     it("should verify confirmation token", async () => {
-      let user = { id: 1 };
+      let user = {id: 1};
       let token = jwtHelper.computeConfirmationToken(user);
       let data = jwtHelper.verifyConfirmationToken(token);
       assert.isObject(data);
@@ -62,7 +62,7 @@ describe("helper://jwt", function () {
 
   describe("#computeResetToken", () => {
     it("should compute reset token for user", () => {
-      let user = { id: 1, passwordHash: "demo" };
+      let user = {id: 1, passwordHash: "demo"};
       let token = jwtHelper.computeResetToken(user);
       assert.isString(token);
     });
@@ -70,7 +70,7 @@ describe("helper://jwt", function () {
 
   describe("#verifyResetToken", () => {
     it("should verify reset password token for user", async () => {
-      let user = { id: 1, passwordHash: "demo" };
+      let user = {id: 1, passwordHash: "demo"};
       let token = jwtHelper.computeResetToken(user);
       let data = jwtHelper.verifyResetToken(token);
       assert.isObject(data);

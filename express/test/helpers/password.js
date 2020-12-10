@@ -6,7 +6,7 @@ chai.use(chaiAsPromised);
 
 const assert = chai.assert;
 
-import { passwordHelper } from "../../helpers";
+import {passwordHelper} from "../../helpers";
 
 describe("helper://password", function () {
 

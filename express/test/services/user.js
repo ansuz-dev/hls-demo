@@ -7,7 +7,7 @@ chai.use(chaiAsPromised);
 
 const assert = chai.assert;
 
-import { userService } from "../../services";
+import {userService} from "../../services";
 import {
   UserTypes,
   UserStates,

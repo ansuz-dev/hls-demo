@@ -1,6 +1,6 @@
 const httpError = require("http-errors");
 
-const { jwtHelper } = require("../helpers");
+const {jwtHelper} = require("../helpers");
 const {
   logger,
   userService,
