@@ -72,6 +72,7 @@ export const requestLogger = expressWinston.logger({
     "body",
   ],
   bodyBlacklist: [ "password" ],
+  responseWhitelist: ["body"],
   colorize: false,
   ignoreRoute: function (req) {
     if (req.url.match(/^\/docs\/.*/g)) {
@@ -96,7 +97,7 @@ export const errorLogger = expressWinston.errorLogger({
     winston.format.prettyPrint(),
   ),
   metaField: null,
-  blacklistedMetaFields: ["exception"],
+  blacklistedMetaFields: ["exception", "process", "os"],
   requestWhitelist: [
     "hostname",
     "ip",
@@ -109,6 +110,7 @@ export const errorLogger = expressWinston.errorLogger({
     "body",
   ],
   bodyBlacklist: [ "password" ],
+  responseWhitelist: ["body"],
   colorize: false,
 });
 
