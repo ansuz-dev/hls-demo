@@ -1,10 +1,11 @@
-import faker from "faker";
+/* eslint-disable no-magic-numbers */
+/* eslint-disable max-lines-per-function */
 import chai from "chai";
 import chaiHttp from "chai-http";
 import chaiAsPromised from "chai-as-promised";
 
-import server from "../../../../index";
-import dbunit from "../../../dbunit/generic";
+import server from "../../../../index.js";
+import dbunit from "../../../dbunit/generic.js";
 
 chai.use(chaiHttp);
 chai.use(chaiAsPromised);
@@ -14,29 +15,9 @@ const assert = chai.assert;
 chai.should();
 
 describe("route://api/v1/auth", () => {
-
   beforeEach(async () => {
     await dbunit.clean();
     await dbunit.init();
-  });
-
-  describe("#register", () => {
-    it("api v1 - should regisger a new account", async () => {
-      const data = {
-        email: faker.internet.email(),
-        password: faker.internet.password(8),
-        defaultLanguage: "VI",
-      };
-
-      return chai.request(server)
-        .post("/api/v1/auth/register")
-        .set("X-Requested-With", "XMLHttpRequest")
-        .send(data)
-        .then((res) => {
-          expect(res).to.have.status(200);
-        });
-    });
-
   });
 
   describe("#login", () => {
@@ -46,14 +27,13 @@ describe("route://api/v1/auth", () => {
         password: "my_password",
       };
 
-      return chai.request(server)
+      const res = await chai.request(server)
         .post("/api/v1/auth/login")
         .set("X-Requested-With", "XMLHttpRequest")
-        .send(data)
-        .then((res) => {
-          expect(res).to.have.status(200);
-          assert.isString(res.body.token);
-        });
+        .send(data);
+
+      expect(res).to.have.status(200);
+      assert.isString(res.body.token);
     });
 
     it("api v1 - should throw error if invalid email", async () => {
@@ -62,13 +42,12 @@ describe("route://api/v1/auth", () => {
         password: "my_password",
       };
 
-      return chai.request(server)
+      const res = await chai.request(server)
         .post("/api/v1/auth/login")
         .set("X-Requested-With", "XMLHttpRequest")
-        .send(data)
-        .then((res) => {
-          expect(res).to.have.status(401);
-        });
+        .send(data);
+
+      expect(res).to.have.status(401);
     });
 
     it("api v1 - should throw error if invalid password", async () => {
@@ -77,13 +56,12 @@ describe("route://api/v1/auth", () => {
         password: "my_bad_password",
       };
 
-      return chai.request(server)
+      const res = await chai.request(server)
         .post("/api/v1/auth/login")
         .set("X-Requested-With", "XMLHttpRequest")
-        .send(data)
-        .then((res) => {
-          expect(res).to.have.status(401);
-        });
+        .send(data);
+
+      expect(res).to.have.status(401);
     });
 
     it("api v1 - should throw error if user is blocked", async () => {
@@ -92,43 +70,12 @@ describe("route://api/v1/auth", () => {
         password: "my_password",
       };
 
-      return chai.request(server)
+      const res = await chai.request(server)
         .post("/api/v1/auth/login")
         .set("X-Requested-With", "XMLHttpRequest")
-        .send(data)
-        .then((res) => {
-          expect(res).to.have.status(401);
-        });
-    });
-  });
+        .send(data);
 
-  describe("#resetPassword", () => {
-    it("api v1 - should request to reset password by user", async () => {
-      const data = {
-        email: "johndoe20102020+1@gmail.com",
-      };
-
-      return chai.request(server)
-        .put("/api/v1/auth/password")
-        .set("X-Requested-With", "XMLHttpRequest")
-        .send(data)
-        .then((res) => {
-          expect(res).to.have.status(200);
-        });
-    });
-
-    it("api v1 - should allow to use invalid email by user", async () => {
-      const data = {
-        email: "invalid@gmail.com",
-      };
-
-      return chai.request(server)
-        .put("/api/v1/auth/password")
-        .set("X-Requested-With", "XMLHttpRequest")
-        .send(data)
-        .then((res) => {
-          expect(res).to.have.status(200);
-        });
+      expect(res).to.have.status(401);
     });
   });
 });

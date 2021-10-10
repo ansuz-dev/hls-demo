@@ -1,12 +1,12 @@
+/* eslint-disable no-magic-numbers */
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
 
-function initSecrets() {
+const initSecrets = () => {
   // create secrets.js
   const secretsFile = path.join(__dirname, "../secrets.js");
-  if (fs.existsSync(secretsFile))
-    return false;
+  if (fs.existsSync(secretsFile)) return false;
 
   const secrets = {
     db: {
@@ -17,9 +17,7 @@ function initSecrets() {
       dialect: "mysql",
       logging: false,
     },
-    cookie: {
-      secret: crypto.randomBytes(48).toString("base64"),
-    },
+    cookie: {secret: crypto.randomBytes(48).toString("base64")},
     jwt: {
       user: crypto.randomBytes(48).toString("base64"),
       confirmation: crypto.randomBytes(48).toString("base64"),
@@ -31,6 +29,6 @@ function initSecrets() {
     secretsFile,
     `module.exports = ${JSON.stringify(secrets, null, 2)};`,
   );
-}
+};
 
 initSecrets();

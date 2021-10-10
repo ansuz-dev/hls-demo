@@ -12,7 +12,4 @@ dist/
 # external docs
 logs/
 
-config/
 mochawesome-report/
-
-public/js/

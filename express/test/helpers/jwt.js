@@ -1,40 +1,40 @@
-const chai = require("chai");
-const chaiAsPromised = require("chai-as-promised");
+/* eslint-disable max-lines-per-function */
+import chai from "chai";
+import chaiAsPromised from "chai-as-promised";
+
+import {jwtHelper} from "../../helpers/index.js";
 
 chai.should();
 chai.use(chaiAsPromised);
 
 const assert = chai.assert;
 
-import {jwtHelper} from "../../helpers";
-
-describe("helper://jwt", function () {
-
+describe("helper://jwt", () => {
   describe("#computeUserToken", () => {
     it("should compute user token", () => {
-      let user = {
+      const user = {
         id: 1,
         passwordHash: "demo",
       };
-      let token = jwtHelper.computeUserToken(user, true);
+      const token = jwtHelper.computeUserToken(user, true);
       assert.isString(token);
     });
   });
 
   describe("#verifyUserToken", () => {
-    it("should verify user token", async () => {
-      let user = {id: 1, passwordHash: "demo"};
-      let token = jwtHelper.computeUserToken(user);
-      let data = jwtHelper.verifyUserToken(token);
+    it("should verify user token", () => {
+      const user = {id: 1, passwordHash: "demo"};
+      const token = jwtHelper.computeUserToken(user);
+      const data = jwtHelper.verifyUserToken(token);
       assert.isObject(data);
       assert.equal(data.id, 1);
     });
 
-    it("should not verify user token if password is changed", async () => {
+    it("should not verify user token if password is changed", () => {
       try {
-        let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiY2hlY2tzdW0iOiJlMTAwIiwiaWF0IjoxNTk0NzQzOTExLCJhdWQiOiJvcGVyYXRvciIsImlzcyI6ImhybGFuY2VyIiwic3ViIjoiYWNjZXNzIn0.8Bn0IdG--2fqaOToKXhWbn9NP3jTlcRxhsn0YsX29IQ";
+        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiY2hlY2tzdW0iOiJlMTAwIiwiaWF0IjoxNTk0NzQzOTExLCJhdWQiOiJvcGVyYXRvciIsImlzcyI6ImhybGFuY2VyIiwic3ViIjoiYWNjZXNzIn0.8Bn0IdG--2fqaOToKXhWbn9NP3jTlcRxhsn0YsX29IQ";
         jwtHelper.verifyUserToken(token);
-      } catch(error) {
+      } catch (error) {
         assert.isNotNull(error);
       }
     });
@@ -42,19 +42,17 @@ describe("helper://jwt", function () {
 
   describe("#computeConfirmationToken", () => {
     it("should compute confirmation token", () => {
-      let user = {
-        id: 1,
-      };
-      let token = jwtHelper.computeConfirmationToken(user);
+      const user = {id: 1};
+      const token = jwtHelper.computeConfirmationToken(user);
       assert.isString(token);
     });
   });
 
   describe("#verifyConfirmationToken", () => {
-    it("should verify confirmation token", async () => {
-      let user = {id: 1};
-      let token = jwtHelper.computeConfirmationToken(user);
-      let data = jwtHelper.verifyConfirmationToken(token);
+    it("should verify confirmation token", () => {
+      const user = {id: 1};
+      const token = jwtHelper.computeConfirmationToken(user);
+      const data = jwtHelper.verifyConfirmationToken(token);
       assert.isObject(data);
       assert.equal(data.id, 1);
     });
@@ -62,17 +60,17 @@ describe("helper://jwt", function () {
 
   describe("#computeResetToken", () => {
     it("should compute reset token for user", () => {
-      let user = {id: 1, passwordHash: "demo"};
-      let token = jwtHelper.computeResetToken(user);
+      const user = {id: 1, passwordHash: "demo"};
+      const token = jwtHelper.computeResetToken(user);
       assert.isString(token);
     });
   });
 
   describe("#verifyResetToken", () => {
-    it("should verify reset password token for user", async () => {
-      let user = {id: 1, passwordHash: "demo"};
-      let token = jwtHelper.computeResetToken(user);
-      let data = jwtHelper.verifyResetToken(token);
+    it("should verify reset password token for user", () => {
+      const user = {id: 1, passwordHash: "demo"};
+      const token = jwtHelper.computeResetToken(user);
+      const data = jwtHelper.verifyResetToken(token);
       assert.isObject(data);
       assert.equal(data.id, 1);
       assert.isString(data.checksum);

@@ -1,4 +1,5 @@
-import db from "../../models";
+import db from "../../models/index.js";
+
 const {
   Sequelize,
   User,
@@ -6,7 +7,7 @@ const {
 
 const Op = Sequelize.Op;
 
-async function init() {
+const init = async () => {
   await User.bulkCreate([
     {
       id: 1,
@@ -41,13 +42,15 @@ async function init() {
       defaultLanguage: "VI",
     },
   ]);
-}
+};
 
-async function clean() {
+const clean = async () => {
   await User.destroy({where: {id: {[Op.ne]: null}}});
-}
+};
 
-export default {
+const dbunit = {
   init,
   clean,
 };
+
+export default dbunit;

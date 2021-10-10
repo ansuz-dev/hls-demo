@@ -1,17 +1,14 @@
-const httpError = require("http-errors");
+import httpError from "http-errors";
 
-const {jwtHelper} = require("../helpers");
-const {
-  logger,
-  userService,
-} = require("../services");
+import {jwtHelper} from "../helpers/index.js";
+import {userService} from "../services/index.js";
 
 /**
  * Get token from request
  *
  * @param {Request} req
  */
-function getToken(req) {
+const getToken = req => {
   if (req.headers.authorization
     && req.headers.authorization.split(" ")[0] === "Bearer") {
     return req.headers.authorization.split(" ")[1];
@@ -30,34 +27,33 @@ function getToken(req) {
   }
 
   return null;
-}
+};
 
-async function verifyResetToken(req) {
-  var token = getToken(req);
-  if (!token)
-    throw httpError(401, "Invalid token");
-  var decoded = jwtHelper.verifyResetToken(token);
-  if (!decoded)
-    throw httpError(401, "Invalid token");
+const verifyResetToken = async req => {
+  const token = getToken(req);
+  if (!token) throw httpError.Unauthorized("Invalid token");
+  const decoded = jwtHelper.verifyResetToken(token);
+  if (!decoded) throw httpError.Unauthorized("Invalid token");
   if (!decoded.id) {
-    throw httpError(401, "Invalid token");
+    throw httpError.Unauthorized("Invalid token");
   }
   const user = await userService.get(decoded.id);
   if (decoded.checksum !== jwtHelper.computeChecksum.verifyResetToken(user)) {
-    throw httpError(401, "Invalid token");
+    throw httpError.Unauthorized("Invalid token");
   }
-  req.user = user;
-}
 
-function requireReset(req, res, next) {
+  // eslint-disable-next-line require-atomic-updates
+  req.user = user;
+};
+
+const requireReset = (req, res, next) => {
   verifyResetToken(req)
     .then(next)
-    .catch((error) => {
-      logger.error(error);
-      next(httpError(401, "Invalid token"));
+    .catch(() => {
+      next(httpError.Unauthorized("Invalid token"));
     });
-}
-
-export default {
-  requireReset,
 };
+
+const resetMid = {requireReset};
+
+export default resetMid;

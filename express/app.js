@@ -1,4 +1,4 @@
-/*eslint no-unused-vars: ["error", { "args": "none" }]*/
+/* eslint no-unused-vars: ["error", { "args": "none" }]*/
 
 import path from "path";
 import httpError from "http-errors";
@@ -6,42 +6,38 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import cors from "cors";
-import indexRouter from "./routes/index";
+import {requestLogger, errorLogger} from "@ansuzdev/logger";
 
-import {cookie} from "../secrets";
+import secrets from "../secrets.js";
+import indexRouter from "./routes/index.js";
 
-import {logger} from "./services";
+// eslint-disable-next-line no-shadow
+const __dirname = path.resolve();
 
 const app = express();
-app.use(helmet({
-  contentSecurityPolicy: false,
-}));
+app.use(helmet({contentSecurityPolicy: false}));
 app.disable("x-powered-by");
 app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
-app.use(cookieParser(cookie.secret));
+app.use(cookieParser(secrets.cookie));
 app.use(express.static(path.join(__dirname, "../webapp")));
 
-app.use(logger.requestLogger);
+app.use(requestLogger);
 
 app.use("/", indexRouter);
 
-app.use(logger.errorLogger);
+app.use(errorLogger);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(httpError(404));
+app.use((req, res, next) => {
+  next(httpError.NotFound());
 });
 
 // error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get("env") === "development" ? err : {};
-
-  // render the error page
+app.use((err, req, res, next) => {
+  // eslint-disable-next-line no-magic-numbers
   res.status(err.status || 500);
   res.json({message: err.message});
 });

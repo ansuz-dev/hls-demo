@@ -1,4 +1,4 @@
-const {checkSchema} = require("express-validator");
+import {checkSchema} from "express-validator";
 
 /**
  * @swagger
@@ -45,6 +45,6 @@ const registerValidator = checkSchema({
   },
 });
 
-export default {
-  registerValidator,
-};
+const authValidator = {registerValidator};
+
+export default authValidator;

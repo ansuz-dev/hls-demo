@@ -1,9 +1,10 @@
+/* eslint-disable no-magic-numbers */
 import chai from "chai";
 import chaiHttp from "chai-http";
 import chaiAsPromised from "chai-as-promised";
 
-import server from "../../../../index";
-import dbunit from "../../../dbunit/generic";
+import server from "../../../../index.js";
+import dbunit from "../../../dbunit/generic.js";
 
 chai.use(chaiHttp);
 chai.use(chaiAsPromised);
@@ -15,7 +16,6 @@ chai.should();
 let _token = null;
 
 describe("route://api/v1/user", () => {
-
   before(async () => {
     await dbunit.clean();
     await dbunit.init();
@@ -27,7 +27,7 @@ describe("route://api/v1/user", () => {
           email: "johndoe20102020+1@gmail.com",
           password: "my_password",
         })
-        .then((res) => {
+        .then(res => {
           _token = res.body.token;
         }),
     ]);
@@ -40,62 +40,13 @@ describe("route://api/v1/user", () => {
 
   describe("#getOwnInfo", () => {
     it("api v1 - should get information of logged user", async () => {
-      return chai.request(server)
+      const res = await chai.request(server)
         .get("/api/v1/user")
         .set("X-Requested-With", "XMLHttpRequest")
-        .set("authorization", `Bearer ${_token}`)
-        .then((res) => {
-          expect(res).to.have.status(200);
-          assert.equal(res.body.email, "johndoe20102020+1@gmail.com");
-        });
-    });
-  });
+        .set("authorization", `Bearer ${_token}`);
 
-  describe("#updateOwnInfo", () => {
-    it("api v1 - should update information of logged user", async () => {
-      let data = {
-        defaultLanguage: "EN",
-      };
-
-      return chai.request(server)
-        .put("/api/v1/user")
-        .set("X-Requested-With", "XMLHttpRequest")
-        .set("authorization", `Bearer ${_token}`)
-        .send(data)
-        .then((res) => {
-          expect(res).to.have.status(200);
-          assert.equal(res.body.defaultLanguage, data.defaultLanguage);
-        });
-    });
-  });
-
-  describe("#deleteOwnAccount", () => {
-    it("api v1 - should delte logged user", async () => {
-      return chai.request(server)
-        .delete("/api/v1/user")
-        .set("X-Requested-With", "XMLHttpRequest")
-        .set("authorization", `Bearer ${_token}`)
-        .then((res) => {
-          expect(res).to.have.status(200);
-        });
-    });
-  });
-
-  describe("#changePassword", () => {
-    it("api v1 - should change password of logged user", async () => {
-      let data = {
-        oldPassword: "my_password",
-        newPassword: "my_new_password",
-      };
-
-      return chai.request(server)
-        .put("/api/v1/user/password")
-        .set("X-Requested-With", "XMLHttpRequest")
-        .set("authorization", `Bearer ${_token}`)
-        .send(data)
-        .then((res) => {
-          expect(res).to.have.status(200);
-        });
+      expect(res).to.have.status(200);
+      assert.equal(res.body.email, "johndoe20102020+1@gmail.com");
     });
   });
 });

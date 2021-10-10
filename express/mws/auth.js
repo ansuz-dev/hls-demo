@@ -1,31 +1,26 @@
-const httpError = require("http-errors");
+import httpError from "http-errors";
 
-const {jwtHelper} = require("../helpers");
-const {
-  logger,
-  userService,
-} = require("../services");
+import {jwtHelper} from "../helpers/index.js";
+import {userService} from "../services/index.js";
 
-const {
-  UserStates,
-} = require("../services/constant");
+import {UserStates} from "../services/constant.js";
 
 /**
  * Get token from request
  *
  * @param {Request} req
  */
-function getToken(req) {
+const getToken = req => {
   if (req.headers.authorization
     && req.headers.authorization.split(" ")[0] === "Bearer") {
     return req.headers.authorization.split(" ")[1];
   }
 
-  if (req.cookies.token) {
+  if (req.cookies && req.cookies.token) {
     return req.cookies.token;
   }
 
-  if (req.signedCookies.token) {
+  if (req.signedCookies && req.signedCookies.token) {
     return req.signedCookies.token;
   }
 
@@ -34,41 +29,40 @@ function getToken(req) {
   }
 
   return null;
-}
+};
 
-async function verifyUserToken(req, verificationFunc) {
-  var token = getToken(req);
-  if (!token)
-    throw httpError(401, "Invalid token");
-  var decoded = jwtHelper[verificationFunc](token);
-  if (!decoded)
-    throw httpError(401, "Invalid token");
+const verifyUserToken = async (req, verificationFunc) => {
+  const token = getToken(req);
+  if (!token) throw httpError.Unauthorized("Invalid token");
+  const decoded = jwtHelper[verificationFunc](token);
+  if (!decoded) throw httpError.Unauthorized("Invalid token");
   if (!decoded.id || !decoded.checksum) {
-    throw httpError(401, "Invalid token");
+    throw httpError.Unauthorized("Invalid token");
   }
   const user = await userService.get(decoded.id);
   if (decoded.checksum !== jwtHelper.computeChecksum.verifyAuthToken(user)) {
-    throw httpError(401, "Invalid token");
+    throw httpError.Unauthorized("Invalid token");
   }
   if (user.state !== UserStates.enabled) {
-    throw httpError(403, "You don't have permission to access this action");
+    throw httpError.Forbidden("You don't have permission to access this action");
   }
-  req.user = user;
-}
 
-function requireUser(req, res, next) {
+  // eslint-disable-next-line require-atomic-updates
+  req.user = user;
+};
+
+const requireUser = (req, res, next) => {
   verifyUserToken(req, "verifyUserToken")
     .then(() => {
       res.locals = res.locals || {};
       res.locals.user = req.user;
       next();
     })
-    .catch((error) => {
-      logger.error(error);
-      next(httpError(401, "Invalid token"));
+    .catch(() => {
+      next(httpError.Unauthorized("Invalid token"));
     });
-}
-
-export default {
-  requireUser,
 };
+
+const authMid = {requireUser};
+
+export default authMid;

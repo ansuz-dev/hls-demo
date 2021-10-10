@@ -1,9 +1,9 @@
-"use strict";
-
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 
-import {jwt as config} from "../../secrets";
+import secrets from "../../secrets.js";
+
+const config = secrets.jwt;
 
 const issuer = "template";
 
@@ -13,20 +13,21 @@ const subjects = {
   reset: "reset",
 };
 
-const audiences = {
-  user: "user",
+const audiences = {user: "user"};
+
+const checksumLength = 4;
+
+const _computeChecksum = (account, subject) => {
+  const sha256 = crypto.createHash("SHA256");
+  const hash = sha256.update(account.passwordHash).update(subject)
+    .digest("hex");
+
+  return hash.substr(0, checksumLength);
 };
 
-function _computeChecksum(account, subject) {
-  let sha256 = crypto.createHash("SHA256");
-  let hash = sha256.update(account.passwordHash).update(subject).digest("hex");
-
-  return hash.substr(0, 4);
-}
-
 const computeChecksum = {
-  verifyAuthToken: (account) => _computeChecksum(account, subjects.access),
-  verifyResetToken: (account) => _computeChecksum(account, subjects.reset),
+  verifyAuthToken: account => _computeChecksum(account, subjects.access),
+  verifyResetToken: account => _computeChecksum(account, subjects.reset),
 };
 
 /**
@@ -38,8 +39,8 @@ const computeChecksum = {
  *
  * @returns {string} access token
  */
-function computeUserToken(user, permanent=false) {
-  let opts = {
+const computeUserToken = (user, permanent = false) => {
+  const opts = {
     issuer,
     audience: audiences.user,
     subject: subjects.access,
@@ -57,7 +58,7 @@ function computeUserToken(user, permanent=false) {
     config.user,
     opts,
   );
-}
+};
 
 /**
  * Compute confirmation token for the user
@@ -68,8 +69,8 @@ function computeUserToken(user, permanent=false) {
  *
  * @returns {string} confirmation token
  */
-function computeConfirmationToken(user) {
-  let opts = {
+const computeConfirmationToken = user => {
+  const opts = {
     issuer,
     audience: audiences.user,
     subject: subjects.confirmation,
@@ -77,13 +78,11 @@ function computeConfirmationToken(user) {
   };
 
   return jwt.sign(
-    {
-      id: user.id,
-    },
+    {id: user.id},
     config.confirmation,
     opts,
   );
-}
+};
 
 /**
  * Compute reset password token for the user
@@ -93,8 +92,8 @@ function computeConfirmationToken(user) {
  *
  * @returns {string} reset password token
  */
-function computeResetToken(user) {
-  let opts = {
+const computeResetToken = user => {
+  const opts = {
     issuer,
     audience: audiences.user,
     subject: subjects.reset,
@@ -109,7 +108,7 @@ function computeResetToken(user) {
     config.reset,
     opts,
   );
-}
+};
 
 /**
  * Verify access token of the user
@@ -120,13 +119,11 @@ function computeResetToken(user) {
  *
  * @throws { Error } Invalid token
  */
-function verifyUserToken(token) {
-  return jwt.verify(token, config.user, {
-    issuer,
-    audience: audiences.user,
-    subject: subjects.access,
-  });
-}
+const verifyUserToken = token => jwt.verify(token, config.user, {
+  issuer,
+  audience: audiences.user,
+  subject: subjects.access,
+});
 
 /**
  * Verify confirmation token of the user
@@ -137,13 +134,11 @@ function verifyUserToken(token) {
  *
  * @throws { Error } Invalid token
  */
-function verifyConfirmationToken(token) {
-  return jwt.verify(token, config.confirmation, {
-    issuer,
-    audience: audiences.user,
-    subject: subjects.confirmation,
-  });
-}
+const verifyConfirmationToken = token => jwt.verify(token, config.confirmation, {
+  issuer,
+  audience: audiences.user,
+  subject: subjects.confirmation,
+});
 
 /**
  * Verify reset password token of the user
@@ -154,15 +149,13 @@ function verifyConfirmationToken(token) {
  *
  * @throws { Error } Invalid token
  */
-function verifyResetToken(token) {
-  return jwt.verify(token, config.reset, {
-    issuer,
-    audience: audiences.user,
-    subject: subjects.reset,
-  });
-}
+const verifyResetToken = token => jwt.verify(token, config.reset, {
+  issuer,
+  audience: audiences.user,
+  subject: subjects.reset,
+});
 
-export default {
+const jwtHelper = {
   computeChecksum,
   computeUserToken,
   verifyUserToken,
@@ -171,3 +164,5 @@ export default {
   computeResetToken,
   verifyResetToken,
 };
+
+export default jwtHelper;

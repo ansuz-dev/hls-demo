@@ -1,52 +1,43 @@
-/*eslint no-unused-vars: ["error", { "args": "none" }]*/
+/* eslint no-unused-vars: ["error", { "args": "none" }]*/
 
-"use strict";
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable("Users", {
       id: {
-        field: "id",
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
       email: {
-        field: "email",
-        type: Sequelize.STRING(160),
+        type: Sequelize.STRING,
         allowNull: false,
         unique: true,
       },
       passwordHash: {
-        field: "password_hash",
-        type: Sequelize.STRING(64),
+        type: Sequelize.STRING,
         allowNull: false,
       },
       type: {
-        field: "type",
         type: Sequelize.ENUM("PERSON", "ORGANIZATION"),
         allowNull: false,
         defaultValue: "PERSON",
       },
       state: {
-        field: "state",
         type: Sequelize.ENUM("CREATED", "ENABLED", "BLOCKED"),
         allowNull: false,
         defaultValue: "CREATED",
       },
       defaultLanguage: {
-        field: "default_language",
-        type: Sequelize.STRING(3),
+        type: Sequelize.STRING,
         allowNull: false,
         defaultValue: "EN",
       },
-      createdDate: {
-        field: "created_date",
+      createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
       },
-      updatedDate: {
-        field: "updated_date",
+      updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
       },
