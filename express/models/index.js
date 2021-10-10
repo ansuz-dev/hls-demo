@@ -1,7 +1,12 @@
 import Sequelize from "sequelize";
+import cls from "cls-hooked";
 
 import secrets from "../../secrets.js";
 import User from "./user.js";
+
+const namespace = cls.createNamespace("template");
+
+Sequelize.useCLS(namespace);
 
 const config = {...secrets.db};
 
