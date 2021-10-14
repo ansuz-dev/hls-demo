@@ -1,6 +1,5 @@
 /* eslint no-unused-vars: ["error", { "args": "none" }]*/
 
-import path from "path";
 import httpError from "http-errors";
 import express from "express";
 import cookieParser from "cookie-parser";
@@ -9,10 +8,8 @@ import cors from "cors";
 import {requestLogger, errorLogger} from "@ansuzdev/logger";
 
 import secrets from "../secrets.js";
+import configs from "../configs.js";
 import indexRouter from "./routes/index.js";
-
-// eslint-disable-next-line no-shadow
-const __dirname = path.resolve();
 
 const app = express();
 app.use(helmet({contentSecurityPolicy: false}));
@@ -22,7 +19,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser(secrets.cookie));
-app.use(express.static(path.join(__dirname, "../webapp")));
+app.use(express.static(configs.dirs.static));
 
 app.use(requestLogger);
 

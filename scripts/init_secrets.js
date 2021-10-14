@@ -3,9 +3,12 @@ import fs from "fs";
 import path from "path";
 import crypto from "crypto";
 
+// eslint-disable-next-line no-shadow
+const __dirname = path.resolve();
+
 const initSecrets = () => {
   // create secrets.js
-  const secretsFile = path.join(__dirname, "../secrets.js");
+  const secretsFile = path.join(__dirname, "secrets.js");
   if (fs.existsSync(secretsFile)) return false;
 
   const secrets = {
@@ -27,7 +30,7 @@ const initSecrets = () => {
 
   fs.writeFileSync(
     secretsFile,
-    `module.exports = ${JSON.stringify(secrets, null, 2)};`,
+    `const secrets = ${JSON.stringify(secrets, null, 2)};\n\nexport default secrets;`,
   );
 };
 
