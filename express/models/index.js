@@ -2,7 +2,6 @@ import Sequelize from "sequelize";
 import cls from "cls-hooked";
 
 import secrets from "../../secrets.js";
-import User from "./user.js";
 
 const namespace = cls.createNamespace("template");
 
@@ -24,9 +23,7 @@ const sequelize = new Sequelize(
   config,
 );
 
-const UserModel = User(sequelize);
-
-const db = {[UserModel.name]: UserModel};
+const db = {};
 
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {

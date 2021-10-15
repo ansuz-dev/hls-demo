@@ -15,17 +15,12 @@ const initSecrets = () => {
     db: {
       username: "",
       password: "",
-      database: "template",
+      database: "hls",
       host: "127.0.0.1",
       dialect: "mysql",
       logging: false,
     },
     cookie: {secret: crypto.randomBytes(48).toString("base64")},
-    jwt: {
-      user: crypto.randomBytes(48).toString("base64"),
-      confirmation: crypto.randomBytes(48).toString("base64"),
-      reset: crypto.randomBytes(48).toString("base64"),
-    },
   };
 
   fs.writeFileSync(

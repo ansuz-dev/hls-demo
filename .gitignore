@@ -66,3 +66,5 @@ dist
 secrets*
 tmp/
 mochawesome-report/
+express/test/files/
+webapp/media/

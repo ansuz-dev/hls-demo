@@ -8,9 +8,9 @@ const options = {
   swaggerDefinition: {
     openapi: "3.0.0",
     info: {
-      title: "Template API Documentation",
+      title: "HLS demo API Documentation",
       version: "1.0.0",
-      description: "The tempalte API",
+      description: "The HLS demo API",
     },
     servers: [
       {
