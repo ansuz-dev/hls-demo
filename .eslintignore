@@ -13,3 +13,5 @@ dist/
 logs/
 
 mochawesome-report/
+express/test/files/
+webapp/

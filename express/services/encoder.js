@@ -33,7 +33,6 @@ const encodeHLS = async file => {
       -master_pl_name ${masterName}.m3u8 \
       -var_stream_map "v:0,a:0 v:1,a:1 v:2,a:2 v:3,a:3" ${targetDir}/stream_%v/index.m3u8`);
   } catch (error) {
-    console.log(error);
     throw httpError.BadRequest(`Can't encode file=[${file}]`);
   }
 };

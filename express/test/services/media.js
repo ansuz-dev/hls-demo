@@ -1,4 +1,4 @@
-import chai from "chai";
+import chai, {assert} from "chai";
 import chaiAsPromised from "chai-as-promised";
 
 import {mediaService} from "../../services/index.js";
@@ -10,7 +10,7 @@ describe("service://media", () => {
   describe("#listMedias", () => {
     it("should list medias", async () => {
       const res = await mediaService.listMedias();
-      console.log(res);
+      assert.isArray(res);
     });
   });
 });
